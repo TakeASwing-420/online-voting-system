@@ -1,6 +1,6 @@
 from collections import Counter
 from dataclasses import dataclass, field
-from threading import Lock
+from threading import RLock
 from typing import Dict, Iterable, List
 
 
@@ -9,7 +9,7 @@ class VotingStore:
     candidates: List[str]
     _vote_by_voter: Dict[str, str] = field(default_factory=dict)
     _vote_counter: Counter = field(default_factory=Counter)
-    _lock: Lock = field(default_factory=Lock)
+    _lock: RLock = field(default_factory=RLock)
 
     def __post_init__(self) -> None:
         self.candidates = [candidate.strip() for candidate in self.candidates if candidate.strip()]
@@ -35,7 +35,8 @@ class VotingStore:
             return self.results()
 
     def results(self) -> Dict[str, int]:
-        return {candidate: int(self._vote_counter.get(candidate, 0)) for candidate in self.candidates}
+        with self._lock:
+            return {candidate: int(self._vote_counter.get(candidate, 0)) for candidate in self.candidates}
 
     @property
     def total_votes(self) -> int:
@@ -45,4 +46,3 @@ class VotingStore:
     @classmethod
     def from_candidates(cls, candidates: Iterable[str]) -> "VotingStore":
         return cls(candidates=list(candidates))
-

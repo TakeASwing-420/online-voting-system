@@ -15,7 +15,10 @@ class VotingClient:
     def send_vote(self, candidate: str) -> dict:
         payload = {"type": "vote", "voter_id": self.voter_id, "candidate": candidate}
         self.socket.sendto(encode_message(payload), self.server_address)
-        response_data, _ = self.socket.recvfrom(MESSAGE_SIZE)
+        try:
+            response_data, _ = self.socket.recvfrom(MESSAGE_SIZE)
+        except socket.timeout as exc:
+            raise TimeoutError("Server did not respond within timeout period.") from exc
         return decode_message(response_data)
 
 
@@ -66,4 +69,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

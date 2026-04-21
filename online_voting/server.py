@@ -18,9 +18,12 @@ class VotingServer:
         print(f"[server] candidates: {', '.join(self.store.candidates)}")
 
         while True:
-            data, client_address = self.socket.recvfrom(MESSAGE_SIZE)
-            response = self._handle_message(data)
-            self.socket.sendto(encode_message(response), client_address)
+            try:
+                data, client_address = self.socket.recvfrom(MESSAGE_SIZE)
+                response = self._handle_message(data)
+                self.socket.sendto(encode_message(response), client_address)
+            except OSError as exc:
+                print(f"[server] socket error: {exc}")
 
     def _handle_message(self, data: bytes) -> dict:
         try:
@@ -64,4 +67,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
