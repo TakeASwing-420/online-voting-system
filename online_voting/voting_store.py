@@ -27,7 +27,7 @@ class VotingStore:
 
             if previous_candidate is not None:
                 self._vote_counter[previous_candidate] -= 1
-                if self._vote_counter[previous_candidate] <= 0:
+                if self._vote_counter[previous_candidate] == 0:
                     del self._vote_counter[previous_candidate]
 
             self._vote_by_voter[voter_id] = candidate

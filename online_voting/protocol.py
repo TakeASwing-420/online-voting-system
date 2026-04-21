@@ -9,7 +9,7 @@ class ProtocolError(ValueError):
 
 
 def encode_message(payload: Dict[str, Any]) -> bytes:
-    return json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return json.dumps(payload, separators=(",", ":")).encode("utf-8")
 
 
 def decode_message(raw_data: bytes) -> Dict[str, Any]:
@@ -36,4 +36,3 @@ def validate_vote_message(message: Dict[str, Any]) -> Dict[str, str]:
         raise ProtocolError("voter_id must be a non-empty string.")
 
     return {"type": "vote", "candidate": candidate.strip(), "voter_id": voter_id.strip()}
-

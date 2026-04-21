@@ -28,6 +28,9 @@ python run_server.py --host 127.0.0.1 --port 9999 --candidates Alice Bob Charlie
 
 ```bash
 python run_client.py --host 127.0.0.1 --port 9999 --voter-id voter-1
+
+# Optional: increase wait time for slower networks
+python run_client.py --host 127.0.0.1 --port 9999 --voter-id voter-1 --timeout 5
 ```
 
 Then select a candidate in the client prompt to cast/update your vote.
